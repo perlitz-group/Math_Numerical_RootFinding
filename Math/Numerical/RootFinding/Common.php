@@ -42,11 +42,6 @@
  */
 class Math_Numerical_RootFinding_Common
 {
-    public function testFunction()
-    {
-
-        return 'dddddddddd';
-    }
     
     // {{{ Properties
 
