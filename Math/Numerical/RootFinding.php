@@ -63,6 +63,11 @@ $GLOBALS['_Math_Numerical_RootFinding_drivers'] = array(
 class Math_Numerical_RootFinding
 {
     // {{{ factory()
+    
+    public function testFunction($param = 'test param')
+    {
+        return $param;
+    }
 
     /**
      * Create new instance of RootFinding method class.
