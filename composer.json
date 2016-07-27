@@ -27,6 +27,9 @@
         "source": "https://github.com/pear/Math_Numerical_RootFinding"
     },
     "type": "library",
+    "require": {
+        "php": "~5.3"
+    },
     "require-dev": {
         "phpunit/phpunit": "*"
     }
