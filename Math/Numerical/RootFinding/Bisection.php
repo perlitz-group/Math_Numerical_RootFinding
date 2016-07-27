@@ -28,11 +28,6 @@
  */
 
 /**
- * Math_Numerical_RootFinding_Common
- */
-require_once 'Math/Numerical/RootFinding/Common.php';
-
-/**
  * Bisection/Binary Chopping/Interval Halving/Bolzano method class.
  *
  * @category   Math
@@ -44,7 +39,7 @@ require_once 'Math/Numerical/RootFinding/Common.php';
  * @version    Release: @package_version@
  * @link       http://pear.php.net/package/Math_Numerical_RootFinding
  */
-class Math_Numerical_RootFinding_Bisection extends Math_Numerical_RootFinding_Common
+class Math_Numerical_RootFinding_Bisection extends \Math_Numerical_RootFinding_Common
 {
     // {{{ Constructor
 
@@ -56,7 +51,7 @@ class Math_Numerical_RootFinding_Bisection extends Math_Numerical_RootFinding_Co
      * @access public
      * @see Math_Numerical_RootFinding_Common::Math_Numerical_RootFinding_Common()
      */
-    function Math_Numerical_RootFinding_Bisection($options = null)
+    public function Math_Numerical_RootFinding_Bisection($options = null)
     {
         parent::Math_Numerical_RootFinding_Common($options);
     }
@@ -70,7 +65,7 @@ class Math_Numerical_RootFinding_Bisection extends Math_Numerical_RootFinding_Co
      * @access public
      * @return void
      */
-    function infoCompute()
+    public function infoCompute()
     {
         print "<h2>Bisection::compute()</h2>\n" .
 
@@ -105,26 +100,20 @@ class Math_Numerical_RootFinding_Bisection extends Math_Numerical_RootFinding_Co
      * @see Math_Numerical_RootFinding::getEqResult()
      * @see Math_Numerical_RootFinding_Falseposition::compute()
      */
-    function compute($fxFunction, $xL, $xU)
+    public function compute($fxFunction, $xL, $xU)
     {
         // Validate f(x) equation function.
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $fxFunction, $xL
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // Sets first approximation $xR (Bisection's formula).
         $xR = ($xU + $xL) / 2;
 
         // Validate f(x) equation function.
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $fxFunction, $xR
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // Sets maximum iteration and tolerance from options.
         $maxIteration = $this->options['max_iteration'];
@@ -136,8 +125,8 @@ class Math_Numerical_RootFinding_Bisection extends Math_Numerical_RootFinding_Co
 
         for ($i = 0; $i < $maxIteration; $i++) {
             // Calculate f(x), where: x = xL and x = xR
-            $fxL = Math_Numerical_RootFinding_Common::getEqResult($fxFunction, $xL);
-            $fxR = Math_Numerical_RootFinding_Common::getEqResult($fxFunction, $xR);
+            $fxL = parent::getEqResult($fxFunction, $xL);
+            $fxR = parent::getEqResult($fxFunction, $xR);
 
             if ($fxL * $fxR < 0) { // Root is at first subinterval.
                 $xU = $xR;
@@ -158,7 +147,7 @@ class Math_Numerical_RootFinding_Bisection extends Math_Numerical_RootFinding_Co
             // Detect for divergent rows.
             if ($this->isDivergentRows($epsErrors) &&
                 $this->options['divergent_skip']) {
-                return PEAR::raiseError(
+                throw new \Exception(
                          'Iteration skipped, divergent rows detected'
                        );
                 break;

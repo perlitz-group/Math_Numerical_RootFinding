@@ -24,27 +24,6 @@
  * @link      http://pear.php.net/package/Math_Numerical_RootFinding
  */
 
-/**
- * PEAR
- */
-require_once 'PEAR.php';
-
-/**
- * Method driver aliases in order to create the prety file names,
- * also for insensitive-case of method name calls.
- *
- * @global array $GLOBALS['_Math_Numerical_RootFinding_drivers']
- * @_Math_Numerical_RootFinding_drivers
- */
-$GLOBALS['_Math_Numerical_RootFinding_drivers'] = array(
-    'bisection'         => 'Bisection',
-    'falseposition'     => 'FalsePosition',
-    'fixedpoint'        => 'FixedPoint',
-    'newtonraphson'     => 'NewtonRaphson',
-    'newtonraphson2'    => 'NewtonRaphson2',
-    'ralstonrabinowitz' => 'RalstonRabinowitz',
-    'secant'            => 'Secant'
-);
 
 /**
  * Math_Numerical_RootFinding base class.
@@ -62,6 +41,35 @@ $GLOBALS['_Math_Numerical_RootFinding_drivers'] = array(
  */
 class Math_Numerical_RootFinding
 {
+    
+    /**
+     * Method driver aliases in order to create the prety file names,
+     * also for insensitive-case of method name calls.
+     *
+     * @global array $GLOBALS['_Math_Numerical_RootFinding_drivers']
+     * @_Math_Numerical_RootFinding_drivers
+     * 
+     * // OLD WAY
+        $GLOBALS['_Math_Numerical_RootFinding_drivers'] = array(
+            'bisection'         => 'Bisection',
+            'falseposition'     => 'FalsePosition',
+            'fixedpoint'        => 'FixedPoint',
+            'newtonraphson'     => 'NewtonRaphson',
+            'newtonraphson2'    => 'NewtonRaphson2',
+            'ralstonrabinowitz' => 'RalstonRabinowitz',
+            'secant'            => 'Secant'
+        );
+     */
+    protected $drivers = array(
+        'bisection'         => 'Bisection',
+        'falseposition'     => 'FalsePosition',
+        'fixedpoint'        => 'FixedPoint',
+        'newtonraphson'     => 'NewtonRaphson',
+        'newtonraphson2'    => 'NewtonRaphson2',
+        'ralstonrabinowitz' => 'RalstonRabinowitz',
+        'secant'            => 'Secant'
+    );
+    
     // {{{ factory()
     
     public function testFunction($param = 'test param')
@@ -80,39 +88,32 @@ class Math_Numerical_RootFinding
      * @access public
      * @static
      */
-    function &factory($method, $options = null)
+    public static function factory($method, $options = null)
     {
         $method = strtolower(trim($method));
-        if (!isset($GLOBALS['_Math_Numerical_RootFinding_drivers'][$method])) {
-            return PEAR::raiseError('Driver file not found for ' .
+        if (!isset($this->drivers[$method])) {
+            throw new \Exception('Driver file not found for ' .
                                     '\'' . $method . '\' method');
         }
 
-        $method = $GLOBALS['_Math_Numerical_RootFinding_drivers'][$method];
+        $method = $this->drivers[$method];
         $filename = dirname(__FILE__) . '/RootFinding/' . $method . '.php';
 
         if (!file_exists($filename)) {
-            return PEAR::raiseError('Driver file not found for ' .
+            throw new \Exception('Driver file not found for ' .
                                     '\'' . $method . '\' method');
         }
 
         include_once $filename;
-        $classname = 'Math_Numerical_RootFinding_' . $method;
+        $classname = '\Math_Numerical_RootFinding_' . $method;
         if (!class_exists($classname)) {
-            return PEAR::raiseError('Undefined class \'' . $classname . '\'');
+            throw new \Exception('Undefined class \'' . $classname . '\'');
         }
 
-        $obj =& new $classname;
+        $obj = new $classname;
         if (!is_object($obj) || !is_a($obj, $classname)) {
-            return PEAR::raiseError('Failed creating object from class '.
+            throw new \Exception('Failed creating object from class '.
                                     '\'' . $classname . '\'');
-        }
-
-        if ($options !== null) {
-            $err = $obj->set($options);
-            if (PEAR::isError($err)) {
-                return $err;
-            }
         }
 
         return $obj;

@@ -31,11 +31,6 @@
  */
 
 /**
- * Math_Numerical_RootFinding_Common
- */
-require_once 'Math/Numerical/RootFinding/Common.php';
-
-/**
  * Ralston and Rabinowitz method class.
  *
  * @category   Math
@@ -48,7 +43,7 @@ require_once 'Math/Numerical/RootFinding/Common.php';
  * @version    Release: @package_version@
  */
 class Math_Numerical_RootFinding_RalstonRabinowitz
-extends Math_Numerical_RootFinding_Common
+extends \Math_Numerical_RootFinding_Common
 {
     // {{{ Constructor
 
@@ -60,7 +55,7 @@ extends Math_Numerical_RootFinding_Common
      * @access public
      * @see Math_Numerical_RootFinding_Common::Math_Numerical_RootFinding_Common()
      */
-    function Math_Numerical_RootFinding_RalstonRabinowitz($options = null)
+    public function Math_Numerical_RootFinding_RalstonRabinowitz($options = null)
     {
         parent::Math_Numerical_RootFinding_Common($options);
     }
@@ -74,7 +69,7 @@ extends Math_Numerical_RootFinding_Common
      * @access public
      * @return void
      */
-    function infoCompute()
+    public function infoCompute()
     {
         print "<h2>False Position::compute()</h2>\n" .
 
@@ -115,23 +110,17 @@ extends Math_Numerical_RootFinding_Common
      * @see Math_Numerical_RootFinding_Common::isDivergentRow()
      * @see Math_Numerical_RootFinding_Secant::compute()
      */
-    function compute($fxFunction, $dxFunction, $xR0, $xR1)
+    public function compute($fxFunction, $dxFunction, $xR0, $xR1)
     {
         // Validate f(x) equation function.
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $fxFunction, $xR0
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // Validate f'(x) equation function.
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $dxFunction, $xR0
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // Sets maximum iteration and tolerance from options.
         $maxIteration = $this->options['max_iteration'];
@@ -143,18 +132,18 @@ extends Math_Numerical_RootFinding_Common
 
         for ($i = 1; $i <= $maxIteration; $i++) {
             // Calculate f(x[i-1]) and f'(x[1]), where: x[i-1] = $xR0.
-            $fxR0 = Math_Numerical_RootFinding_Common::getEqResult(
+            $fxR0 = parent::getEqResult(
                       $fxFunction, $xR0
                     );
-            $dxR0 = Math_Numerical_RootFinding_Common::getEqResult(
+            $dxR0 = parent::getEqResult(
                       $dxFunction, $xR0
                     );
 
             // Calculate f(x[i]) and f'(x[1]), where: x[i] = $xR1.
-            $fxR1 = Math_Numerical_RootFinding_Common::getEqResult(
+            $fxR1 = parent::getEqResult(
                       $fxFunction, $xR1
                     );
-            $dxR1 = Math_Numerical_RootFinding_Common::getEqResult(
+            $dxR1 = parent::getEqResult(
                       $dxFunction, $xR1
                     );
 
@@ -166,7 +155,7 @@ extends Math_Numerical_RootFinding_Common
 
             // Avoid division by zero.
             if ($uxR0 - $uxR1 == 0) {
-                return PEAR::raiseError('Iteration skipped division by zero');
+                throw new \Exception('Iteration skipped division by zero');
             }
 
             // Ralston and Rabinowitz's formula.
@@ -185,7 +174,7 @@ extends Math_Numerical_RootFinding_Common
             // Detect for divergent rows.
             if ($this->isDivergentRows($epsErrors) &&
                 $this->options['divergent_skip']) {
-                return PEAR::raiseError(
+                throw new \Exception(
                          'Iteration skipped, divergent rows detected'
                        );
                 break;

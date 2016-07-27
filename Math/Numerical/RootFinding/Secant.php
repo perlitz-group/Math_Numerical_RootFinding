@@ -27,11 +27,6 @@
  */
 
 /**
- * Math_Numerical_RootFinding_Common
- */
-require_once 'Math/Numerical/RootFinding/Common.php';
-
-/**
  * Secant method class.
  *
  * @category   Math
@@ -43,7 +38,7 @@ require_once 'Math/Numerical/RootFinding/Common.php';
  * @link       http://pear.php.net/package/Math_Numerical_RootFinding
  * @version    Release: @package_version@
  */
-class Math_Numerical_RootFinding_Secant extends Math_Numerical_RootFinding_Common
+class Math_Numerical_RootFinding_Secant extends \Math_Numerical_RootFinding_Common
 {
     // {{{ Constructor
 
@@ -55,7 +50,7 @@ class Math_Numerical_RootFinding_Secant extends Math_Numerical_RootFinding_Commo
      * @access public
      * @see Math_Numerical_RootFinding_Common::Math_Numerical_RootFinding_Common()
      */
-    function Math_Numerical_RootFinding_Secant($options = null)
+    public function Math_Numerical_RootFinding_Secant($options = null)
     {
        parent::Math_Numerical_RootFinding_Common($options);
     }
@@ -69,7 +64,7 @@ class Math_Numerical_RootFinding_Secant extends Math_Numerical_RootFinding_Commo
      * @access public
      * @return void
      */
-    function infoCompute()
+    public function infoCompute()
     {
         print "<h2>False Position::compute()</h2>\n" .
 
@@ -105,15 +100,12 @@ class Math_Numerical_RootFinding_Secant extends Math_Numerical_RootFinding_Commo
      * @see Math_Numerical_RootFinding_Common::isDivergentRow()
      * @see Math_Numerical_RootFinding_Ralstonrabinowitz::compute()
      */
-    function compute($fxFunction, $xR0, $xR1)
+    public function compute($fxFunction, $xR0, $xR1)
     {
         // Validate f(x) equation function.
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $fxFunction, $xR0
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // Sets maximum iteration and tolerance from options.
         $maxIteration = $this->options['max_iteration'];
@@ -125,18 +117,18 @@ class Math_Numerical_RootFinding_Secant extends Math_Numerical_RootFinding_Commo
 
         for ($i = 1; $i <= $maxIteration; $i++) {
             // Calculate f(x[i-1]), where: x[i-1] = $xR0.
-            $fxR0 = Math_Numerical_RootFinding_Common::getEqResult(
+            $fxR0 = parent::getEqResult(
                       $fxFunction, $xR0
                     );
 
             // Calculate f(x[i]), where: x[i] = $xR1.
-            $fxR1 = Math_Numerical_RootFinding_Common::getEqResult(
+            $fxR1 = parent::getEqResult(
                       $fxFunction, $xR1
                     );
 
             // Avoid division by zero.
             if ($fxR0 - $fxR1 == 0) {
-                return PEAR::raiseError('Iteration skipped division by zero');
+                throw new \Exception('Iteration skipped division by zero');
             }
 
             // Secant's formula.
@@ -155,7 +147,7 @@ class Math_Numerical_RootFinding_Secant extends Math_Numerical_RootFinding_Commo
             // Detect for divergent rows.
             if ($this->isDivergentRows($epsErrors) &&
                 $this->options['divergent_skip']) {
-                return PEAR::raiseError(
+                throw new \Exception(
                          'Iteration skipped, divergent rows detected'
                        );
                 break;

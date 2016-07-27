@@ -27,11 +27,6 @@
  */
 
 /**
- * Math_Numerical_RootFinding_Common
- */
-require_once 'Math/Numerical/RootFinding/Common.php';
-
-/**
  * Newton-Raphson method class.
  *
  * @category   Math
@@ -44,7 +39,7 @@ require_once 'Math/Numerical/RootFinding/Common.php';
  * @version    Release: @package_version@
  */
 class Math_Numerical_RootFinding_NewtonRaphson
-extends Math_Numerical_RootFinding_Common
+extends \Math_Numerical_RootFinding_Common
 {
     // {{{ Constructor
 
@@ -56,7 +51,7 @@ extends Math_Numerical_RootFinding_Common
      * @access public
      * @see Math_Numerical_RootFinding_Common::Math_Numerical_RootFinding_Common()
      */
-    function Math_Numerical_RootFinding_NewtonRaphson($options = null)
+    public function Math_Numerical_RootFinding_NewtonRaphson($options = null)
     {
         parent::Math_Numerical_RootFinding_Common($options);
     }
@@ -70,7 +65,7 @@ extends Math_Numerical_RootFinding_Common
      * @access public
      * @return void
      */
-    function infoCompute()
+    public function infoCompute()
     {
         print "<h2>False Position::compute()</h2>\n" .
 
@@ -107,25 +102,19 @@ extends Math_Numerical_RootFinding_Common
      * @see Math_Numerical_RootFinding_Common::validateEqFunction()
      * @see Math_Numerical_RootFinding_Common::getEqResult()
      * @see Math_Numerical_RootFinding_Common::isDivergentRow()
-     * @see Math_Numerical_RootFinding_Newtonraphson2::compute()
+     * @see Math_Numerical_RootFinding_NewtonRaphson2::compute()
      */
-    function compute($fxFunction, $dfxFunction, $xR)
+    public function compute($fxFunction, $dfxFunction, $xR)
     {
         // evaluate f(x) equation function before begin anything
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $fxFunction, $xR
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // evaluate df(x) equation function before begin anything
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $dfxFunction, $xR
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // Sets maximum iteration and tolerance from options.
         $maxIteration = $this->options['max_iteration'];
@@ -137,14 +126,14 @@ extends Math_Numerical_RootFinding_Common
 
         for ($i = 1; $i < $maxIteration; $i++) {
             // Calculate f(x[i]), where: x[i] = $xR.
-            $fxR = Math_Numerical_RootFinding_Common::getEqResult($fxFunction, $xR);
+            $fxR = parent::getEqResult($fxFunction, $xR);
 
             // Calculate f'(x[i]), where: x[i] = $xR.
-            $dxR = Math_Numerical_RootFinding_Common::getEqResult($dfxFunction, $xR);
+            $dxR = parent::getEqResult($dfxFunction, $xR);
 
             // Avoid division by zero.
             if ($dxR == 0) {
-                return PEAR::raiseError('Iteration skipped, division by zero');
+                throw new \Exception('Iteration skipped, division by zero');
             }
 
             // Newton-Raphson's formula.
@@ -163,7 +152,7 @@ extends Math_Numerical_RootFinding_Common
             // Detect for divergent rows.
             if ($this->isDivergentRows($epsErrors) &&
                 $this->options['divergent_skip']) {
-                return PEAR::raiseError(
+                throw new \Exception(
                          'Iteration skipped, divergent rows detected'
                        );
                 break;

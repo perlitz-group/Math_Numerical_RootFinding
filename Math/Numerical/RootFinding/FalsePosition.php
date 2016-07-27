@@ -27,11 +27,6 @@
  */
 
 /**
- * Math_Numerical_RootFinding_Common
- */
-require_once 'Math/Numerical/RootFinding/Common.php';
-
-/**
  * False Position/Regula Falsi method class.
  *
  * @category   Math
@@ -44,7 +39,7 @@ require_once 'Math/Numerical/RootFinding/Common.php';
  * @version    Release: @package_version@
  */
 class Math_Numerical_RootFinding_FalsePosition
-extends Math_Numerical_RootFinding_Common
+extends \Math_Numerical_RootFinding_Common
 {
     // {{{ Constructor
 
@@ -105,25 +100,22 @@ extends Math_Numerical_RootFinding_Common
      * @see Math_Numerical_RootFinding_Common::getEqResult()
      * @see Math_Numerical_RootFinding_Bisection::compute()
      */
-    function compute($fxFunction, $xL, $xU)
+    public function compute($fxFunction, $xL, $xU)
     {
         // Validate f(x) equation function.
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $fxFunction, $xL
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // Sets maximum iteration and tolerance from options.
         $maxIteration = $this->options['max_iteration'];
         $errTolerance = $this->options['err_tolerance'];
 
         // Calculate first approximation $xR (False Position's formula).
-        $fxL = Math_Numerical_RootFinding_Common::getEqResult($fxFunction, $xL);
-        $fxU = Math_Numerical_RootFinding_Common::getEqResult($fxFunction, $xU);
+        $fxL = parent::getEqResult($fxFunction, $xL);
+        $fxU = parent::getEqResult($fxFunction, $xU);
         if ($fxL - $fxU == 0) {
-            return PEAR::raiseError('Iteration skipped, division by zero');
+            throw new \Exception('Iteration skipped, division by zero');
         }
         $xR = $xU - (($fxU * ($xL - $xU)) / ($fxL - $fxU));
 
@@ -133,7 +125,7 @@ extends Math_Numerical_RootFinding_Common
 
         for ($i = 0; $i < $maxIteration; $i++) {
             // Calculate f(xr), where: xr = $xR
-            $fxR = Math_Numerical_RootFinding_Common::getEqResult($fxFunction, $xR);
+            $fxR = parent::getEqResult($fxFunction, $xR);
 
             if ($fxL * $fxR < 0) { // Root is at first subinterval.
                 $xU = $xR;
@@ -146,7 +138,7 @@ extends Math_Numerical_RootFinding_Common
 
             // Avoid division by zero.
             if ($fxL - $fxU == 0) {
-                return PEAR::raiseError('Iteration skipped, division by zero');
+                throw new \Exception('Iteration skipped, division by zero');
             }
 
             // Compute new approximation.
@@ -159,7 +151,7 @@ extends Math_Numerical_RootFinding_Common
             // Detect for divergent rows.
             if ($this->isDivergentRows($epsErrors) &&
                 $this->options['divergent_skip']) {
-                return PEAR::raiseError(
+                throw new \Exception(
                          'Iteration skipped, divergent rows detected'
                        );
                 break;
@@ -173,9 +165,9 @@ extends Math_Numerical_RootFinding_Common
             }
 
             // Calculate f(xl), where xl = $xL.
-            $fxL = Math_Numerical_RootFinding_Common::getEqResult($fxFunction, $xL);
+            $fxL = parent::getEqResult($fxFunction, $xL);
             // Calculate f(xu), where xu = $xU.
-            $fxU = Math_Numerical_RootFinding_Common::getEqResult($fxFunction, $xU);
+            $fxU = parent::getEqResult($fxFunction, $xU);
 
             // Switch xn -> xr, where xn = $xN and xr = $xR.
             $xR = $xN;

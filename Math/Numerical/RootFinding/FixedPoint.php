@@ -27,11 +27,6 @@
  */
 
 /**
- * Math_Numerical_RootFinding_Common
- */
-require_once 'Math/Numerical/RootFinding/Common.php';
-
-/**
  * Fixed Point method class.
  *
  * @category   Math
@@ -43,7 +38,7 @@ require_once 'Math/Numerical/RootFinding/Common.php';
  * @link       http://pear.php.net/package/Math_Numerical_RootFinding
  * @version    Release: @package_version@
  */
-class Math_Numerical_RootFinding_FixedPoint extends Math_Numerical_RootFinding_Common
+class Math_Numerical_RootFinding_FixedPoint extends \Math_Numerical_RootFinding_Common
 {
     // {{{ Constructor
 
@@ -55,7 +50,7 @@ class Math_Numerical_RootFinding_FixedPoint extends Math_Numerical_RootFinding_C
      * @access public
      * @see Math_Numerical_RootFinding_Common::Math_Numerical_RootFinding_Common()
      */
-    function Math_Numerical_RootFinding_FixedPoint($options = null)
+    public function Math_Numerical_RootFinding_FixedPoint($options = null)
     {
         parent::Math_Numerical_RootFinding_Common($options);
     }
@@ -69,7 +64,7 @@ class Math_Numerical_RootFinding_FixedPoint extends Math_Numerical_RootFinding_C
      * @access public
      * @return void
      */
-    function infoCompute()
+    public function infoCompute()
     {
         print "<h2>Fixed Point::compute()</h2>\n" .
 
@@ -103,15 +98,12 @@ class Math_Numerical_RootFinding_FixedPoint extends Math_Numerical_RootFinding_C
      * @see Math_Numerical_RootFinding_Common::getEqResult()
      * @see Math_Numerical_RootFinding_Common::isDivergentRow()
      */
-    function compute($gxFunction, $xR)
+    public function compute($gxFunction, $xR)
     {
         // Validate g(x) equation function.
-        $err = Math_Numerical_RootFinding_Common::validateEqFunction(
+        parent::validateEqFunction(
                  $gxFunction, $xR
                );
-        if (PEAR::isError($err)) {
-            return $err;
-        }
 
         // Sets maximum iteration and tolerance from options.
         $maxIteration = $this->options['max_iteration'];
@@ -123,7 +115,7 @@ class Math_Numerical_RootFinding_FixedPoint extends Math_Numerical_RootFinding_C
 
         for ($i = 0; $i < $maxIteration; $i++) {
             // Calculate g(x[i]), where x[i] = $xR (Fixed Point's formula).
-            $xN = Math_Numerical_RootFinding_Common::getEqResult($gxFunction, $xR);
+            $xN = parent::getEqResult($gxFunction, $xR);
 
             // xR is the root.
             if ($xN == 0) {
@@ -138,7 +130,7 @@ class Math_Numerical_RootFinding_FixedPoint extends Math_Numerical_RootFinding_C
             // Detect for divergent rows.
             if ($this->isDivergentRows($epsErrors) &&
                 $this->options['divergent_skip']) {
-                return PEAR::raiseError(
+                throw new \Exception(
                          'Iteration skipped, divergent rows detected'
                        );
                 break;

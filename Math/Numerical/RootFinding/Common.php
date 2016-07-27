@@ -27,11 +27,6 @@
  */
 
 /**
- * PEAR
- */
-require_once 'PEAR.php';
-
-/**
  * Abstract class contains common properties and methods for specified method
  * classes.
  *
@@ -47,6 +42,12 @@ require_once 'PEAR.php';
  */
 class Math_Numerical_RootFinding_Common
 {
+    public function testFunction()
+    {
+
+        return 'dddddddddd';
+    }
+    
     // {{{ Properties
 
     /**
@@ -103,7 +104,7 @@ class Math_Numerical_RootFinding_Common
      * @access public
      * @see    set()
      */
-    function Math_Numerical_RootFinding_Common($options = null)
+    public function Math_Numerical_RootFinding_Common($options = null)
     {
         if ($options !== null) {
             $this->set($options);
@@ -128,23 +129,20 @@ class Math_Numerical_RootFinding_Common
      * @return bool|PEAR_Error TRUE on success or PEAR_Error on failure.
      * @access public
      */
-    function set($option, $value = null)
+    public function set($option, $value = null)
     {
         if (!is_array($option) && !is_string($option)) {
-            return PEAR::raiseError('Type mismatch for $option argument');
+            throw new \Exception('Type mismatch for $option argument');
         }
 
         if (is_array($option)) {
             foreach ($option as $key => $val) {
                 $err = $this->set($key, $val);
-                if (PEAR::isError($err)) {
-                    return $err;
-                }
             }
         } elseif (is_string($option)) {
             if (isset($this->options[$option])) {
                 if (!isset($value)) {
-                    return PEAR::raiseError('No value given for option ' .
+                    throw new \Exception('No value given for option ' .
                                             '\'' . $option . '\'');
                 }
 
@@ -152,7 +150,7 @@ class Math_Numerical_RootFinding_Common
                 settype($value, gettype($this->options[$option]));
                 $this->options[$option] = $value;
             } else {
-                return PEAR::raiseError('Unknown option \'' . $option . '\'');
+                throw new \Exception('Unknown option \'' . $option . '\'');
             }
         }
     }
@@ -168,10 +166,10 @@ class Math_Numerical_RootFinding_Common
      * @return mixed Value of the option or PEAR_Error on failure.
      * @since Method available since Release 1.1.0a1
      */
-    function get($option)
+    public function get($option)
     {
         if (!array_key_exists($option, $this->options)) {
-            return PEAR::raiseError('Unknown option \'' . $option . '\'');
+            throw new \Exception('Unknown option \'' . $option . '\'');
         }
 
         return $this->options[$option];
@@ -191,9 +189,9 @@ class Math_Numerical_RootFinding_Common
      *
      * @abstract()
      */
-    function compute()
+    public function compute($fxFunction, $dfxFunction, $xR)
     {
-        return PEAR::raiseError('This function not implemented');
+        throw new \Exception('This function not implemented');
     }
 
     // }}}
@@ -205,7 +203,7 @@ class Math_Numerical_RootFinding_Common
      * @return float Root value.
      * @access public
      */
-    function getRoot()
+    public function getRoot()
     {
         return $this->root;
     }
@@ -219,7 +217,7 @@ class Math_Numerical_RootFinding_Common
      * @return int Iteration count.
      * @access public
      */
-    function getIterationCount()
+    public function getIterationCount()
     {
         return $this->iterationCount;
     }
@@ -233,7 +231,7 @@ class Math_Numerical_RootFinding_Common
      * @return float Epsilon error.
      * @access public
      */
-    function getEpsError()
+    public function getEpsError()
     {
         return $this->epsError;
     }
@@ -252,7 +250,7 @@ class Math_Numerical_RootFinding_Common
      * @return bool TRUE if divergent, otherwise FALSE
      * @access public
      */
-    function isDivergentRows($epsErrors)
+    public function isDivergentRows($epsErrors)
     {
         $n = count($epsErrors);
         if ($n >= 3) {
@@ -275,7 +273,7 @@ class Math_Numerical_RootFinding_Common
      *
      * @access public
      */
-    function reset()
+    public function reset()
     {
         $this->iterationCount = 0;
         $this->epsError = 0;
@@ -299,12 +297,9 @@ class Math_Numerical_RootFinding_Common
      * @see getEqResult()
      * @static
      */
-    function validateEqFunction($eqFunction, $guess = 1)
+    public static function validateEqFunction($eqFunction, $guess = 1)
     {
-        $err = Math_Numerical_RootFinding_Common::getEqResult($eqFunction, $guess);
-        if(PEAR::isError($err)) {
-            return $err;
-        }
+        $err = self::getEqResult($eqFunction, $guess);
         return true;
     }
 
@@ -321,13 +316,13 @@ class Math_Numerical_RootFinding_Common
      * @access public
      * @static
      */
-    function getEqResult($eqFunction, $varValue)
+    public static function getEqResult($eqFunction, $varValue)
     {
         if (is_callable($eqFunction, false, $callable_name)) {
             return call_user_func($eqFunction, $varValue);
         }
 
-        return PEAR::raiseError('Unable call equation function or method ' .
+        throw new \Exception('Unable call equation function or method ' .
                                 '\'' . $callable_name . '()\'');
     }
 
