@@ -50,9 +50,9 @@ class Math_Numerical_RootFinding_Secant extends \Math_Numerical_RootFinding_Comm
      * @access public
      * @see Math_Numerical_RootFinding_Common::Math_Numerical_RootFinding_Common()
      */
-    public function Math_Numerical_RootFinding_Secant($options = null)
+    public function __construct($options = null)
     {
-       parent::Math_Numerical_RootFinding_Common($options);
+       parent::__construct($options);
     }
 
     // }}}

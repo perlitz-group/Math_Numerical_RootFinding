@@ -51,9 +51,9 @@ extends \Math_Numerical_RootFinding_Common
      * @access public
      * @see Math_Numerical_RootFinding_Common::Math_Numerical_RootFinding_Common()
      */
-    function Math_Numerical_RootFinding_FalsePosition($options = null)
+    function __construct($options = null)
     {
-        parent::Math_Numerical_RootFinding_Common($options);
+        parent::__construct($options);
     }
 
     // }}}

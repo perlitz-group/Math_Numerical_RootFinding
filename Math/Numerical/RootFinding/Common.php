@@ -99,7 +99,7 @@ class Math_Numerical_RootFinding_Common
      * @access public
      * @see    set()
      */
-    public function Math_Numerical_RootFinding_Common($options = null)
+    public function __construct($options = null)
     {
         if ($options !== null) {
             $this->set($options);
