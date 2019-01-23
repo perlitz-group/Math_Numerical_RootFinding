@@ -60,7 +60,7 @@ class Math_Numerical_RootFinding
             'secant'            => 'Secant'
         );
      */
-    protected $drivers = array(
+    protected static $drivers = array(
         'bisection'         => 'Bisection',
         'falseposition'     => 'FalsePosition',
         'fixedpoint'        => 'FixedPoint',
@@ -86,12 +86,12 @@ class Math_Numerical_RootFinding
     public static function factory($method, $options = null)
     {
         $method = strtolower(trim($method));
-        if (!isset($this->drivers[$method])) {
+        if (!isset(self::$drivers[$method])) {
             throw new \Exception('Driver file not found for ' .
                                     '\'' . $method . '\' method');
         }
 
-        $method = $this->drivers[$method];
+        $method = self::$drivers[$method];
         $filename = dirname(__FILE__) . '/RootFinding/' . $method . '.php';
 
         if (!file_exists($filename)) {
