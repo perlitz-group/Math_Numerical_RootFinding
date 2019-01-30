@@ -11,15 +11,17 @@ https://github.com/pear/Math_Numerical_RootFinding
 * all classes are called from global namespace
 * Other small improvements
 
+* PHP 7 compatibility
+
 You should use composer to install it
 ```
-composer require hashmode/math_numerical_rootfinding
+composer require perlitz-group/math_numerical_rootfinding
 ```
 
 After installation add the below code into your composer.json and run `composer dump-autoload`
 ```
 "classmap": [
-    "your-vendor-folder/hashmode/math_numerical_rootfinding/Math/Numerical"
+    "your-vendor-folder/perlitz-group/math_numerical_rootfinding/Math/Numerical"
 ]        
 ```
 

@@ -21,7 +21,7 @@
         "./"
     ],
     "license": "BSD License",
-    "name": "hashmode/math_numerical_rootfinding",
+    "name": "perlitz-group/math_numerical_rootfinding",
     "support": {
         "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Math_Numerical_RootFinding",
         "source": "https://github.com/pear/Math_Numerical_RootFinding"
