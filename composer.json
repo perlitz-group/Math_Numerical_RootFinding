@@ -13,13 +13,10 @@
     ],
     "autoload": {
         "psr-0": {
-            "Math": "./"
+            "Math_Numerical_RootFinding": "src/"
         }
     },
     "description": "More info available on: http://pear.php.net/package/Math_Numerical_RootFinding",
-    "include-path": [
-        "./"
-    ],
     "license": "BSD-2-Clause",
     "name": "perlitz-group/math_numerical_rootfinding",
     "support": {

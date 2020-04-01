@@ -92,14 +92,7 @@ class Math_Numerical_RootFinding
         }
 
         $method = self::$drivers[$method];
-        $filename = dirname(__FILE__) . '/RootFinding/' . $method . '.php';
 
-        if (!file_exists($filename)) {
-            throw new \Exception('Driver file not found for ' .
-                                    '\'' . $method . '\' method');
-        }
-
-        include_once $filename;
         $classname = '\Math_Numerical_RootFinding_' . $method;
         if (!class_exists($classname)) {
             throw new \Exception('Undefined class \'' . $classname . '\'');
